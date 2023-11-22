@@ -26,39 +26,41 @@ class Solution {
             //part부분에 방해되는부분이없는지 확인하는 함수
             var acc_i = acc[0]
             var acc_j = acc[1]
+            //벽을 넘는지 확인
+            var res = intArrayOf(dog[0], dog[1])
+            res[0] += acc_i
+            res[1] += acc_j
+            if (res[0] < 0 || res[0] >= park.size) return false
+            if (res[1] < 0 || res[1] >= park[0].length) return false
+
             if (acc_i > 0) {//[n,0]
-                for (i in dog[0]..acc_i) {
+                for (i in dog[0]..dog[0] + acc_i) {
                     if (park[i][dog[1]] == 'X') return false
                 }
             } else if (acc_i < 0) {//[-n,0]
-                for (i in dog[0] until acc_i) {
-                    if (park[-i][dog[1]] == 'X') return false
+                for (i in dog[0] downTo dog[0] + acc_i) {
+                    if (park[i][dog[1]] == 'X') return false
                 }
             } else if (acc_j > 0) {//[0,n]
-                for (j in dog[1]..acc_j) {
+                for (j in dog[1]..dog[1] + acc_j) {
                     if (park[dog[0]][j] == 'X') return false
                 }
             } else if (acc_j < 0) {//[0,-n]
-                for (j in dog[1] until acc_j) {
-                    if (park[dog[0]][-j] == 'X') return false
+                for (j in dog[1] downTo dog[1] + acc_j) {
+                    if (park[dog[0]][j] == 'X') return false
                 }
             }
 
-            //벽을 넘는지 도 확인
-            var res = intArrayOf(dog[0],dog[1])
-            res[0] += acc_i
-            res[1] += acc_j
-            if(res[0]<0 || res[0]>=park.size) return false
-            if(res[1]<0 || res[1]>=park[0].length) return false
+
             dog = res
             return true
         }
         //dog 위치 찾기
-        for (i in park.indices) {
+        loops@ for (i in park.indices) {
             for (j in park[0].indices) {
                 if (park[i][j] == 'S') {
                     dog = intArrayOf(i, j)
-                    break
+                    break@loops
                 }
             }
         }
@@ -77,7 +79,7 @@ class Solution {
 
 fun main() {
     var a = Solution()
-    a.solution(arrayOf("SOO","OOO","OOO"), arrayOf("E 2","S 2","W 1"))//[2,1]
+    a.solution(arrayOf("SOO", "OOO", "OOO"), arrayOf("E 2", "S 2", "W 1"))//[2,1]
     a.solution(arrayOf("SOO", "OXX", "OOO"), arrayOf("E 2", "S 2", "W 1"))//[0,1]
     a.solution(arrayOf("OSO", "OOO", "OXO", "OOO"), arrayOf("E 2", "S 3", "W 1"))//[0,0]
 }
